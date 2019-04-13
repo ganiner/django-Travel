@@ -1,0 +1,96 @@
+{% extends 'userbase.html' %}
+{% load staticfiles %}
+{% block title %}发布游记{% endblock %}
+{% block content %}
+<!-----------------发布封面---------------->
+    <form method="post" id="infoForm" action="" enctype="multipart/form-data">
+<div id="write_cover" style="background:url({{ MEDIA_URL }}{{ image }});background-size: 100% 100%;">
+    <div class="replace_cover"><label><a>
+        更换封面
+        <input name="image" type="file" id="xdaTanFileImg" onchange="xmTanUploadImg(this)" style="display: none"/>
+        </a></label>
+    </div>
+	<div class="replace_name">
+        <div class="cw1000">
+            <input name="title" type="text" placeholder="填写游记标题" maxlength="48" value="{% if diary %}{{ diary.title }}{% endif %}" />
+        </div>
+    </div>
+</div>
+<!-----------------框架---------------->
+<div class="cw1000">
+
+    <script type="text/javascript" src="{% static 'ueditor/ueditor.config.js' %}"></script>
+    <script type="text/javascript" src="{% static 'ueditor/ueditor.all.min.js' %}"></script>
+
+
+    <div class="formRow">
+    <div class="formRight" id="editor">
+
+    <script type="text/javascript">
+        var ue = UE.getEditor('container',{
+            serverUrl: "/ueditor/controller/",
+            initialFrameHeight:600,
+            initialFrameWidth:1000
+        });
+ </script>
+
+    <div class="form-group">
+        <label class="control-label col-md-3">内容:</label>
+            <div class="col-md-4">
+                <script id="container" name="content" type="text/platin">
+                    {% if diary %}
+                        {% autoescape off %}{{ diary.content }}{% endautoescape %}
+                    {% endif %}
+                </script>
+            </div>
+    </div>
+
+    </div>
+    <div class="clear"></div>
+</div>
+{#	<img style="margin-top:30px;" src="images/bjq.jpg"/>#}
+	<!-----------------发布按钮---------------->
+	<div id="write_button">
+		<a class="exit" href="#" onclick="javascript:history.back(-1);">退出</a>
+        {% csrf_token %}
+		<input class="express" type="button" href="#" value="发表" />
+		<span>或</span>
+		<input class="save" type="button" href="#" value="保存草稿" />
+		<div class="clear"></div>
+	</div>
+</div>
+    </form>
+{% endblock %}
+
+{% block script %}
+    <script type="text/javascript">
+            //选择图片，马上预览
+            function xmTanUploadImg(obj) {
+                var file = obj.files[0];
+                var reader = new FileReader();
+                reader.onload = function (e) {
+                    var bg = document.getElementById("write_cover");
+                    bg.style.background = "url(" + e.target.result + ")";
+                    bg.style.backgroundSize = '100% 100%';
+                }
+
+                reader.readAsDataURL(file)
+            }
+    </script>
+
+    <script>
+    $(".express").click(function(){
+
+        $("#infoForm").removeAttr('action');
+        $("#infoForm").attr('action', '{% url 'diarys:setdiaray' 'express' diary.id|default:0 %}');
+        $("#infoForm").submit();
+    });
+
+    $(".save").click(function(){
+
+        $("#infoForm").removeAttr('action');
+        $("#infoForm").attr('action', '{% url 'diarys:setdiaray' 'save' diary.id|default:0 %}');
+        $("#infoForm").submit();
+    });
+    </script>
+{% endblock %}

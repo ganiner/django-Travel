@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+{% load staticfiles %}
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  	<script type="text/javascript" src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'js/amazeui.js' %}"></script>
+    <script type="text/javascript">
+
+
+</script>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/amazeui.css' %}">
+    <!------------核心样式-------------->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+    <link rel="shortcut icon" href="{% static 'images/favicon.ico' %}">
+    {% block script1 %}{% endblock %}
+    {% block css %}{% endblock %}
+    {% block js %}{% endblock %}
+</head>
+<body>
+<!-------------------工具栏------------------->
+<div id="toolbar">
+    <div class="cw1200">
+        <ul class="fl">
+            {% if request.user.is_authenticated %}
+            <li class="tb"><p>您好:{{ request.user.username }}，欢迎访问ChengDu Travel！</p></li>
+			<li class="tb" ><a style="color: red" id="check" href="#" >签到</a>
+{#                <span>|</span></li>#}
+            {% else %}
+            <li class="tb"><a href="{% url 'login' %}">登录</a><span>|</span></li>
+            <li class="tb"><a href="{% url 'register' %}">注册</a></li>
+            {% endif %}
+        </ul>
+		<!-------------------签到弹出层------------------->
+		<div id="sign_layer">
+			<div class="am-modal am-modal-alert" tabindex="-1" style="display: none;margin-top: 0px" id="my-alert">
+			  <div class="am-modal-dialog">
+				<div class="win-m">
+					<p class="p1"></p>
+					<p>获得<span class="already-sign p3" style="color: red;font-size: 30px; margin: 10px"></span>积分</p>
+					<p class="p2"></p>
+					<div class="am-modal-footer">
+					  <span class="am-modal-btn" id="know">知道了</span>
+					</div>
+				</div>
+			  </div>
+			</div>
+		</div>
+        <ul class="fr">
+            {% if request.user.is_authenticated %}
+            <li class="tb">
+				<a href="{% url 'homepage' %}">个人中心</a>
+				<!-------------------用户------------------->
+				<div class="user">
+					<a class="user-hd" href="{% url 'userinfo' 'info' %}">
+						<img src="{{ MEDIA_URL }}{{ request.user.portrait }}"/><b></b>
+						<div class="clear"></div>
+					</a>
+					<div class="user-bd">
+						<div class="integral"><img src="{% static 'images/integral_ico.png' %}"/>当前积分 {{ request.user.integral }}</div>
+						<ul class="nav_sort">
+							<li><a href="{% url 'homepage' %}"><i class="i1"></i>我的主页</a></li>
+							<li><a href="{% url 'diarys:getdiaray' 0 %}"><i class="i2"></i>写游记</a></li>
+							<li><a href="{% url 'diarys:mydetails' 'published' %}"><i class="i9"></i>我的游记</a></li>
+							<li><a href="{% url 'mycollect' %}"><i class="i3"></i>我的收藏</a></li>
+							<li><a href="{% url 'pay:project_order' %}"><i class="i4"></i>商品订单</a></li>
+							<li><a href="{% url 'pay:scenic_order' %}"><i class="i5"></i>旅游订单</a></li>
+							<li><a href="{% url 'mycomments' %}?comments_type=note"><i class="i6"></i>我的评论</a></li>
+							<li><a href="{% url 'userinfo' 'info' %}"><i class="i7"></i>设置</a></li>
+							<li><a href="{% url 'logout' %}"><i class="i8"></i>退出</a></li>
+						</ul>
+					</div>
+				</div>
+				<span>|</span>
+			</li>
+            <li class="tb"><a href="{% url 'operation:shopcar' %}"><i class="cart_ico"></i>购物车</a><span>|</span></li>
+            {% endif %}
+            <li class="tb"><a href="news_list.html">用户帮助中心</a>
+            <span>|</span>
+            <li class="tb"><img src="{% static 'images/tel_ico.gif' %}"/><font>写出后台的</font></li>
+        </ul>
+        <div class="clear"></div>
+    </div>
+</div>
+<!-------------------版头------------------->
+<div id="header">
+    <div class="cw1200">
+        <!-------------------logo------------------->
+        <div class="logo fl"><a title="" href="{% url 'index' %}"><img alt="" src="{% static 'images/t_logo.jpg' %}"></a></div>
+        <div class="search_nav fl">
+            <!-------------------搜索------------------->
+            <div class="search radius6">
+				<form name="searchform" method="post" action="{% url 'operation:search' %}">
+					<input name='ecmsfrom' type='hidden' value='9'>
+					<input type="hidden" name="show" value="title,newstext">
+					<select name="select_box" id="choose">
+						<option value="jq">景区</option>
+						<option value="tc">特产</option>
+						<option value="yj">游记</option>
+						<option value="xw">新闻</option>
+					</select> 
+					<input class="inp_srh" name="keywords"  placeholder="请输入您要搜索的关键词" >
+                    {% csrf_token %}
+					<input class="btn_srh" type="submit" name="submit" value="搜索">
+				</form>
+			</div>
+			<script type="text/javascript" src="{% static 'js/jquery.select.js' %}"></script>
+            <!-------------------导航------------------->
+            <div class="nav">
+                <ul>
+                    <li><a title="" {% if now_type == 'index' %}class="cur"{% endif %} href="{% url 'index' %}">首页</a></li>
+                    <li><a title="" {% if now_type == 'scenic' %}class="cur"{% endif %} href="{% url 'scenicspots:all' %}?list_type=scenic">成都旅游</a></li>
+                    <li><a title="" {% if now_type == 'shop' %}class="cur"{% endif %} href="{% url 'shop:all' %}">特产商城</a></li>
+                    <li><a title="" {% if now_type == 'diary' %}class="cur"{% endif %} href="{% url 'diarys:all' 'new' %}">游记文章</a></li>
+                    <li><a title="" {% if now_type == 'news' %}class="cur"{% endif %} href="{% url 'news:all' %}">新闻资讯</a></li>
+
+                </ul>
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+<!------------------子页框架-------------------->
+{% block content %}{% endblock %}
+<!-----------------版底---------------->
+<div id="footer">
+    <div class="cw1200">
+        <div class="line"><img alt="" src="{% static 'images/b_line.png' %}"/></div>
+        <div class="b_logo"><img alt="" src="{% static 'images/b_logo.png' %}"/></div>
+        <div class="con">
+            <p>xx公司 版权所有</p>
+            <p>地址：四川省成都市文化游客接待中心　邮编：000000　电话：0000-00000000　业务电话：0000-00000000</p>
+            <p>Copyright 2019 agamgn All Rights Reserved 技术支持：agamgn</p>
+        </div>
+        <div class="clear"></div>
+    </div>
+</div>
+</body>
+{% block script2 %}{% endblock %}
+
+<script type="text/javascript">
+$(document).ready(function(){
+ $("#check").click(function(){
+     $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+     $.ajax({
+         type: "POST",
+         data: {'user': '{{ request.user.username }}'},
+         url: {% url 'check' %},
+         cache: false,
+         dataType: "json",
+         success:function (data) {
+             if(data.status == "success"){
+                 $(".p1").text("签到成功")
+                 $(".p3").text("20")
+                 $(".p2").text("每天签到都可以获得积分哦")
+                 {#局部刷新#}
+                 $(".integral").load(location.href + " .integral");
+             }
+             else
+             {
+                 $(".p1").text("签到失败")
+                 $(".p3").text("0")
+                 $(".p2").text("今天已经签过了呦")
+
+             }
+             $("#my-alert").removeClass("am-modal-out")
+             $("#my-alert").addClass("am-modal-active")
+             $("#my-alert")[0].style.display="block"
+             $("#my-alert")[0].style.marginTop=0
+         },
+         error:function (){
+             alert('error')
+         },
+     });
+});
+
+ $("#know").click(function(){
+     $("#my-alert").removeClass("am-modal-active")
+     $("#my-alert").addClass("am-modal-out")
+     $("#my-alert")[0].style.display="none"
+     $("#my-alert")[0].style.marginTop=0
+ });
+});
+
+</script>
+</html>

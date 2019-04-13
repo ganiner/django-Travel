@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+{% block title %}资讯列表{% endblock %}
+{% load staticfiles %}
+{% block content %}
+    <div id="sub_from">
+    <div class="cw1200">
+		<div class="w810 fl">
+			<!------------------公共盒子-------------------->
+			{% block left %}
+                <div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_news_list.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------列表分类-------------------->
+
+				<div id="list_sort">
+					<span>新闻类别：</span>
+					<div class="list_1">
+						<a {% if classification == '' %}class="cur"{% endif %} href="?classification=">全部</a>
+						<a {% if classification == 'hot' %}class="cur"{% endif %} href="?classification=hot">热点资讯</a>
+						<a {% if classification == 'active' %}class="cur"{% endif %} href="?classification=active">活动资讯</a>
+						<a {% if classification == 'culture' %}class="cur"{% endif %} href="?classification=culture">成都文化</a>
+						<a {% if classification == 'food' %}class="cur"{% endif %} href="?classification=food">成都美食</a>
+						<a {% if classification == 'life' %}class="cur"{% endif %} href="?classification=life">成都生活</a>
+						<a {% if classification == 'specialty' %}class="cur"{% endif %} href="?classification=specialty">成都特产</a>
+						<div class="clear"></div>
+					</div>
+				</div>
+				<!------------------新闻列表-------------------->
+				<div id="news_list">
+					<ul>
+                        {% for new in all_news %}
+                        <li>
+							<div class="date"><p>{{ new.add_times|date:"d" }}</p><span>{{ new.add_times|date:"m" }}月</span></div>
+							<div class="pic"><a href="{% url 'news:news_detail' new.id %}"><img class="scale-effect" src="{{ MEDIA_URL }}{{ new.image}}"></a></div>
+							<div class="con">
+								<h3><a href="{% url 'news:news_detail' new.id %}">{{ new.title }}</a></h3>
+								<p>{{ new.content|striptags|truncatechars:"100"  }}
+                                    <a href="{% url 'news:news_detail' new.id %}">详细信息</a>
+                                </p>
+							</div>
+							<div class="share">
+								<div class="bdsharebuttonbox">
+									<a href="#" class="bds_more" data-cmd="more"></a>
+								</div>
+								<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"0","bdSize":"16"},"share":{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+                            </div>
+							<div class="clear"></div>
+						</li>
+                        {% endfor %}
+
+					</ul>
+				</div>
+			</div>
+            {% endblock %}
+		</div>
+		<div class="w380 fr">
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_mobile_platform.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------移动平台-------------------->
+				<div id="mobile_platform">
+					<img src="{% static 'images/mp_pic.jpg' %}"/>
+					<img src="{% static 'images/mp_tag.png' %}"/>
+					<img src="{% static 'images/rwm.jpg' %}"/>
+					<p>微信订票/查询优惠政策请扫二维码</p>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_culture.png' %}"/></div>
+						<div class="more"><a href="?classification=culture">更多>></a></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------公共推荐-------------------->
+				<div id="public_recom">
+					<ul>
+                        {% for cul in culture %}
+						<li>
+							<a href="{% url 'news:news_detail' cul.id %}">
+								<div class="pic"><img class="scale-effect" src="{{ MEDIA_URL }}{{ cul.image }}"/></div>
+								<p>{{ cul.title|truncatechars:"8" }}</p>
+							</a>
+						</li>
+                        {% endfor %}
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_project.png' %}"/></div>
+						<div class="more"><a href="?classification=specialty">更多>></a></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------公共推荐-------------------->
+				<div id="public_recom">
+										<ul>
+                        {% for spe in specialty %}
+						<li>
+							<a href="{% url 'news:news_detail' spe.id %}">
+								<div class="pic"><img class="scale-effect" src="{{ MEDIA_URL }}{{ spe.image }}"/></div>
+								<p>{{ spe.title|truncatechars:"8" }}</p>
+							</a>
+						</li>
+                        {% endfor %}
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_food.png' %}"/></div>
+						<div class="more"><a href="?classification=food">更多>></a></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------公共推荐-------------------->
+				<div id="public_recom">
+					<ul>
+                        {% for fo in food %}
+						<li>
+							<a href="{% url 'news:news_detail' fo.id %}">
+								<div class="pic"><img class="scale-effect" src="{{ MEDIA_URL }}{{ fo.image }}"/></div>
+								<p>{{ fo.title|truncatechars:"8" }}</p>
+							</a>
+						</li>
+                        {% endfor %}
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_life.png' %}"/></div>
+						<div class="more"><a href="?classification=life">更多>></a></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------公共推荐-------------------->
+				<div id="public_recom">
+					<ul>
+                        {% for li in life %}
+						<li>
+							<a href="{% url 'news:news_detail' li.id %}">
+								<div class="pic"><img class="scale-effect"  src="{{ MEDIA_URL }}{{ li.image }}"/></div>
+								<p>{{ li.title|truncatechars:"8" }}</p>
+							</a>
+						</li>
+                        {% endfor %}
+						<div class="clear"></div>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'news_list.html' %}
+{% load staticfiles %}
+{% block title %}资讯详情{% endblock %}
+{% block left %}<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_article.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------文章-------------------->
+				<div id="article">
+					<div class="title">
+						<h2>{{ news.title }}</h2>
+						<p>发布时间：{{ news.add_times|date:"Y/m/d H:i" }}   阅读 {{ news.checknum }} 次</p>
+						<div class="bdsharebuttonbox">
+							<a href="#" class="bds_more" data-cmd="more"></a>
+							<a href="#" class="bds_qzone" data-cmd="qzone" title="分享到QQ空间"></a>
+							<a href="#" class="bds_tsina" data-cmd="tsina" title="分享到新浪微博"></a>
+							<a href="#" class="bds_tqq" data-cmd="tqq" title="分享到腾讯微博"></a>
+							<a href="#" class="bds_renren" data-cmd="renren" title="分享到人人网"></a>
+							<a href="#" class="bds_weixin" data-cmd="weixin" title="分享到微信"></a>
+						</div>
+						<script>window._bd_share_config={"common":{"bdSnsKey":{},"bdText":"","bdMini":"2","bdMiniList":false,"bdPic":"","bdStyle":"1","bdSize":"16"},"share":{},"image":{"viewList":["qzone","tsina","tqq","renren","weixin"],"viewText":"分享到：","viewSize":"16"},"selectShare":{"bdContainerClass":null,"bdSelectMiniList":["qzone","tsina","tqq","renren","weixin"]}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='http://bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];</script>
+					</div>
+					<div class="con">
+						<p>{% autoescape off %}{{ news.content }}{% endautoescape %}</p>
+					</div>
+				</div>
+			</div>{% endblock %}

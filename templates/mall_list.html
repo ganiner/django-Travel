@@ -1,0 +1,57 @@
+{% extends 'news_list.html' %}
+{% block title %}商城列表{% endblock %}
+{% load staticfiles %}
+{% block left %}
+<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_project.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------列表分类-------------------->
+				<div id="list_sort">
+					<span>产品类型：</span>
+					<div class="list_1">
+						<a {% if pro_type == '' %}class="cur"{% endif %} href="?pro_type=">全部</a>
+						<a {% if pro_type == 'ncp' %}class="cur"{% endif %} href="?pro_type=ncp">农产品</a>
+						<a {% if pro_type == 'sg' %}class="cur"{% endif %} href="?pro_type=sg">水果</a>
+						<a {% if pro_type == 'gyp' %}class="cur"{% endif %} href="?pro_type=gyp">工艺品</a>
+						<a {% if pro_type == 'fsp' %}class="cur"{% endif %} href="?pro_type=fsp">副食品</a>
+						<div class="clear"></div>
+					</div>
+
+				</div>
+				<!------------------特产列表-------------------->
+				<div id="mall_list">
+					<ul>
+                        
+                        {% for pro in all_pros %}
+                        <li>
+							<div class="pic"><a href="{% url 'shop:pro_detail' pro.id %}"><img style="width: 100%;height: 100%" class="scale-effect" src="{{ MEDIA_URL }}{{ pro.mainimg }}"/></a></div>
+							<div class="con">
+								<h3><a href="{% url 'shop:pro_detail' pro.id %}">{{ pro.name }}</a></h3>
+								<label>{{ pro.origin }}</label>
+							</div>
+							<div class="price">
+								<p>￥<label>{{ pro.price|floatformat:"2" }}</label></p>
+								<span>运费: {{ pro.freight|floatformat:"2" }}</span>
+							</div>
+							<div class="other">
+								<span>{{ pro.buyers }}人付款</span>
+                                <span>{{ pro.comments }}条评论</span>
+							</div>
+							<div class="view">
+								<a href="{% url 'shop:pro_detail' pro.id %}">查看详情</a>
+							</div>
+							<div class="clear"></div>
+						</li>
+                        {% endfor %}
+					</ul>
+				</div>
+
+			</div>
+{% endblock %}

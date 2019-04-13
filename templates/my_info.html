@@ -1,0 +1,131 @@
+{% extends 'userbase.html' %}
+{% load staticfiles %}
+{% block title %}我的信息{% endblock %}
+{% block right %}
+    <div class="w700 fr">
+		<div class="public_box">
+			<!-----------------我的信息---------------->
+			<div id="set_box">
+                <form method="post" action="{% url 'setting' 'info' %}">
+				    <div class="title"><h2>我的信息</h2></div>
+				        <table class="table_list">
+                            <tr>
+                            <th>昵称：</th>
+                            <td><input class="text" type="text" name="nickname" value="{{ request.user.nickname }}"/></td>
+                        </tr>
+                            <tr>
+                                <th>性别：</th>
+                                <td>
+                                    <label class="am-radio">
+                                        <input class="radio" type="radio" name="gender" value="male" {% if request.user.gender == 'male' %}checked="true"{% endif %} data-am-ucheck checked> 男
+                                    </label>
+                                    <label class="am-radio">
+                                        <input class="radio" type="radio" name="gender" value="famale" {% if request.user.gender == 'female' %}checked="true"{% endif %} data-am-ucheck> 女
+                                    </label>
+                                    <label class="am-radio">
+                                        <input class="radio" type="radio" name="gender" value="secret" {% if request.user.gender == 'secret' %}checked="true"{% endif %} data-am-ucheck> 保密
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>居住城市：</th>
+                                <td>
+                                    <select id="pro" class="am-radio" style="padding: 0">
+{#                                        <option value="">{{ user_prov }}</option>#}
+                                    </select>
+                                    <select id="city" class="am-radio" style="padding: 0">
+{#                                        <option value="">{{ user_city }}</option>#}
+                                    </select>
+                                    <select id="county" class="am-radio" style="padding: 0" name="city_addr">
+{#                                        <option value="">{{ user_coun }}</option>#}
+                                    </select>
+                                    <div id="city_addr"></div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>出生日期：</th>
+                                <td><input type="date"  class="text" name="birthday" value="{{ request.user.birthday|date:"Y-m-d" }}"></td>
+                            </tr>
+                            <tr>
+                                <th>个人签名：</th>
+                                <td><textarea name="signature" placeholder="例：一场说走就走的旅行，不必在乎终点！">{{ request.user.signature }}</textarea></td>
+                            </tr>
+                        </table>
+                {% csrf_token %}
+                    <div class="operation"><input type="submit" class="save" value="保存" /></div>
+                </form>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block script %}
+    <script>
+        $(function () {
+            //获取所有省份
+            $.get('{% url "province" %}', function (dic) {
+                pro = $('#pro')
+                $.each(dic.prov, function (index, item) {
+                    if(item[1] === '{{ user_prov }}'){
+                        pro.append('<option value=' + item[0] + ' selected >' + item[1] + '</option>');
+                    }
+                    else {
+                        pro.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                    }
+                });
+                    {# 获取市 #}
+                    $.get('/city_' + $('#pro').find("option:selected").val() + '/', function (dict) {
+                        city = $('#city');
+                        city.empty();
+                        $('#county').empty();
+                        $.each(dict.city, function (index, item) {
+                            if(item[1] === '{{ user_city }}'){
+                                city.append('<option value=' + item[0] + ' selected >' + item[1] + '</option>');
+                            }
+                            else {
+                                city.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                            }
+
+                         });
+                            {# 获取区/县 #}
+                            $.get('/county_' + $('#city').find("option:selected").val() + '/', function (dict) {
+                                county = $('#county');
+                                county.empty();
+                                $.each(dict.coun, function (index, item) {
+                                        if(item[1] === '{{ user_coun }}'){
+                                            county.append('<option value=' + item[0]+ ' selected >' + item[1] + '</option>');
+                                        }
+                                        else {
+                                            county.append('<option value=' + item[0]+ '>' + item[1] + '</option>');
+                                        }
+
+                                });
+                            });
+
+                    });
+            });
+            //获取市信息
+            $('#pro').change(function () {
+                $.get('/city_' + $(this).val() + '/', function (dict) {
+                    city = $('#city');
+                    city.empty().append('<option value="">市</option>');
+                    $('#county').empty().append('<option value="">区/县</option>');
+                    $.each(dict.city, function (index, item) {
+                        city.append('<option value=' + item[0] + '>' + item[1] + '</option>');
+                    })
+                });
+             });
+
+            //获取区县信息
+            $('#city').change(function () {
+                $.get('/county_' + $(this).val() + '/', function (dict) {
+                    county = $('#county');
+                    county.empty().append('<option value="">区/县</option>');
+                    $.each(dict.coun, function (index, item) {
+                        county.append('<option value=' + item[0]+ '>' + item[1] + '</option>');
+                    })
+                })
+            });
+        })
+    </script>
+{% endblock %}

@@ -1,0 +1,236 @@
+{% extends 'base.html' %}
+{% load staticfiles %}
+{% block script1 %}
+<!--引用百度地图API-->
+<style type="text/css">
+    html,body{margin:0;padding:0;}
+    .iw_poi_title {color:#CC5522;font-size:14px;font-weight:bold;overflow:hidden;padding-right:13px;white-space:nowrap}
+    .iw_poi_content {font:12px arial,sans-serif;overflow:visible;padding-top:4px;white-space:-moz-pre-wrap;word-wrap:break-word}
+</style>
+<script type="text/javascript" src="http://api.map.baidu.com/api?key=&v=1.1&services=true"></script>
+<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    function createMap(){
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point(112.611937,34.728114);//定义一个中心点坐标
+        map.centerAndZoom(point,17);//设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+	map.addControl(ctrl_nav);
+                //向地图中添加比例尺控件
+	var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+	map.addControl(ctrl_sca);
+    }
+
+
+    initMap();//创建和初始化地图
+</script>
+{% endblock %}
+{% block content %}
+    <!------------------景区版头-------------------->
+        <div id="scenic_head" style="background:url({{ MEDIA_URL }}{{ scenic.picture }}) no-repeat center;background-size:100%;">
+	<div class="cw1200">
+		<div class="title"><p>{{ scenic.name }}</p></div>
+		<a href="#" class="view_gallery" id="botn">查看图库<i class="am-icon-chevron-circle-right"></i></a>
+
+		<ul style="display:none;" data-am-widget="gallery" class="am-gallery am-avg-sm-2 am-avg-md-3 am-avg-lg-4 am-gallery-default" data-am-gallery="{ pureview: true }" >
+		  {% for gallery in gallerys  %}
+            <li>
+			<div class="am-gallery-item">
+				<a href="{{ MEDIA_URL }}{{ gallery.image }}" class="">
+				  <img src="{{ MEDIA_URL }}{{ gallery.image }}"  alt="{{ gallery.title }}"/>
+				  <div style="display:none;">
+					<h3 class="am-gallery-title">{{ gallery.title }}</h3>
+					<div class="am-gallery-desc">{{ gallery.add_time }}</div>
+					</div>
+				</a>
+			</div>
+		  </li>
+		  {% endfor %}
+		</ul>
+		<script>
+			$("#botn").live("click",function(){
+				$(".am-gallery-item img").click();
+			});
+
+			$(document).ready(function(){
+				$(".am-icon-chevron-left").attr("class", "am-icon-close");
+			});
+		</script>
+	</div>
+</div>
+    <!------------------子页框架-------------------->
+        <div id="sub_from">
+    <div class="cw1200">
+		<div class="w810 fl">
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_article.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------景区介绍-------------------->
+				<div id="article">
+					<div class="con">
+						<p>{% autoescape off %}{{ scenic.content }}{% endautoescape %}</p>
+					</div>
+					<div class="map">
+                        <div style="width:697px;height:500px;border:#ccc solid 1px;" id="dituContent"></div>
+					</div>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_comment.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------评论-------------------->
+				<div id="comment">
+					<div class="list">
+						<div class="tag">
+							<a class="cur" href="javascript:void(0);">景区评论({{ comments.count }})</a>
+						</div>
+						<ul>
+                            {% for comment in comments %}
+                                <li>
+								<div class="pic"><img src="{{ MEDIA_URL }}{{ comment.user.portrait }}"/></div>
+								<div class="con">
+									<label>{{ comment.user.nickname }}</label>
+									<p>{{ comment.comments }}</p>
+									<span>发表于：{{ comment.add_time|date:"Y-m-d H:i"}}</span>
+								</div>
+							</li>
+                            {% endfor %}
+						</ul>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="w380 fr">
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_online_book.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------在线预订-------------------->
+				<div id="online_book">
+					<ul>
+						<li>景区名称：<span>{{ scenic.name }}</span></li>
+						<li>电话咨询：<span>{{ scenic.phone }}</span></li>
+						<li>开放时间：<span>{{ scenic.businessHours }}</span></li>
+						<li>详细地址：<span>{{ scenic.address }}</span></li>
+						<li>费用：<label>￥{{ scenic.price }}</label></li>
+					</ul>
+					<a class="buy" href="{% url 'operation:travelbuy' %}?list_type=scenic&id={{ scenic.id }}">立即预订</a>
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_surrounding_specialty.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------周边推荐-------------------->
+				<div class="peripheral_recom">
+					<ul>
+                        {% for product in products %}
+                            <li>
+							<div class="pic"><a title="" href="{% url 'shop:pro_detail' product.id %}"><img style="width: 100%;height: 100%" alt="" class="scale-effect" src="{{ MEDIA_URL }}{{ product.mainimg }}"/></a></div>
+							<div class="con">
+								<a href="{% url 'shop:pro_detail' product.id %}">{{ product.name }}</a>
+								<p>价格： ￥{{ product.price }}</p>
+								<span>销量: {{ product.buyers }}</span>
+							</div>
+							<div class="clear"></div>
+						</li>
+                        {% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block script2 %}
+<script type="text/javascript">
+    //创建和初始化地图函数：
+    function initMap(){
+        createMap();//创建地图
+        setMapEvent();//设置地图事件
+        addMapControl();//向地图添加控件
+    }
+
+    //创建地图函数：
+    function createMap(){
+        var map = new BMap.Map("dituContent");//在百度地图容器中创建一个地图
+        var point = new BMap.Point({{ scenic.x }},{{ scenic.y }});//定义一个中心点坐标
+        map.centerAndZoom(point,17);//设定地图的中心点和坐标并将地图显示在地图容器中
+        window.map = map;//将map变量存储在全局
+    }
+
+    //地图事件设置函数：
+    function setMapEvent(){
+        map.enableDragging();//启用地图拖拽事件，默认启用(可不写)
+        map.enableScrollWheelZoom();//启用地图滚轮放大缩小
+        map.enableDoubleClickZoom();//启用鼠标双击放大，默认启用(可不写)
+        map.enableKeyboard();//启用键盘上下左右键移动地图
+    }
+
+    //地图控件添加函数：
+    function addMapControl(){
+        //向地图中添加缩放控件
+	var ctrl_nav = new BMap.NavigationControl({anchor:BMAP_ANCHOR_TOP_LEFT,type:BMAP_NAVIGATION_CONTROL_LARGE});
+	map.addControl(ctrl_nav);
+                //向地图中添加比例尺控件
+	var ctrl_sca = new BMap.ScaleControl({anchor:BMAP_ANCHOR_BOTTOM_LEFT});
+	map.addControl(ctrl_sca);
+    }
+
+    initMap();//创建和初始化地图
+</script>
+{% endblock %}

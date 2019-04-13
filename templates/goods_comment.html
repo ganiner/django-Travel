@@ -1,0 +1,45 @@
+﻿{% extends 'shopbase.html' %}
+{% block title %}订单评价{% endblock %}
+{% block head_title %}订单评价{% endblock %}
+{% block content %}
+<!-----------------发布评论---------------->
+<div id="post_comment">
+	<div class="cw1000">
+		<div class="public_box mh500 pd80">
+            {% for product in products %}
+                <div class="info">
+				<div class="pic"><a href="{% url 'shop:pro_detail' product.good_id %}"><img width="70" height="53" src="{{ MEDIA_URL }}{{ product.good_image }}"></a></div>
+				<div class="name">
+					<a href="{% url 'shop:pro_detail' product.good_id %}">{{ product.good_name }}</a>
+					<p>¥{{ product.good_price }}</p>
+				</div>
+				<div class="clear"></div>
+			</div>
+                <form action="{% url 'operation:commentsgoods' %}?product_id={{ product.good_id }}&order_num={{ product.order_num }}" method="post">
+                    <div class="text_input">
+                        <textarea name="comment" placeholder="填写评论内容"></textarea>
+                    </div>
+                    {% csrf_token %}
+                </form>
+                <div class="tip">
+                    <p>对商品评论后，可获得最多100积分的奖励哦！</p>
+                </div>
+			<div class="h50"></div>
+
+            {% endfor %}
+			<div class="button">
+				<input class="submit" type="button" value="发表评论"/>
+			</div>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+    <script type="text/javascript">
+    $(".submit").click(function () {
+        $("form").each(function(){
+            $(this).submit()
+        });
+    });
+    </script>
+
+{% endblock %}

@@ -1,0 +1,130 @@
+﻿{% extends 'shopbase.html' %}
+{% block head_title %}确认订单{% endblock %}
+{% load operation_extras %}
+{% block content %}
+<!-----------------确认订单---------------->
+<div id="confirm_order">
+	<div class="cw1000">
+		<!-----------------收货人信息---------------->
+		<div class="addr_list">
+			<h2>收货人信息</h2>
+			<ul class="contact">
+                {% for con in contactinfo %}
+                    <li {% if forloop.counter == 1 %}class="cur"{% endif %}>
+					    <h1><span>{{ con.name }}</span>&nbsp;&nbsp;&nbsp;<span>{{ con.mobile }}</span></h1>
+					    <p>{% QueryTheAddress con.city_addr %} {{ con.address }}</p>
+                        <p>邮编：<span>{{ con.zip_code }}</span></p>
+				    </li>
+                {% endfor %}
+				<div class="clear"></div>
+			</ul>
+			<div class="add"><a href="{% url 'userinfo' 'contact' %}">收货人添加与管理</a></div>
+		</div>
+
+		<!-----------------送货清单---------------->
+		<div class="list_box">
+			<h2>送货清单</h2>
+			<table>
+				<tr>
+					<th>商品名称</th>
+					<th>单价</th>
+					<th>数量</th>
+					<th>小计</th>
+				</tr>
+                {% if goodsinfo %}
+                    {% for good in goodsinfo %}
+                        <tr>
+					<td>
+						<div class="pic"><a href="#"><img width=53 height=53 src="{{ MEDIA_URL }}{{ good.product.mainimg }}" /></a></div>
+						<div class="name">
+							<a href="{% url 'shop:pro_detail' good.product.id %}">{{ good.product.name }}</a>
+							<p>添加日期：{{ good.add_time|date:"Y-m-d" }}</p>
+						</div>
+						<div class="clear"></div>
+					</td>
+					<td style="text-align:center;">￥{{ good.product.price|floatformat:"2" }}</td>
+					<td style="text-align:center;">x{{ good.num }}</td>
+					<td style="text-align:center;">￥{% CalculateThePrice good.product.price good.num good.product.freight %}</td>
+				</tr>
+                    {% endfor %}
+                {% else %}
+                    <tr>
+					<td>
+						<div class="pic"><a href="#"><img width=53 height=53 src="{{ MEDIA_URL }}{{ goods.product.mainimg }}" /></a></div>
+						<div class="name">
+							<a href="{% url 'shop:pro_detail' goods.product.id %}">{{ goods.product.name }}</a>
+							<p>添加日期：{% now "Y-m-d" %}</p>
+						</div>
+						<div class="clear"></div>
+					</td>
+					<td style="text-align:center;">￥{{ goods.product.price|floatformat:"2" }}</td>
+					<td style="text-align:center;">x{{ goods.num }}</td>
+					<td style="text-align:center;">￥{% CalculateThePrice goods.product.price goods.num goods.product.freight %}</td>
+				</tr>
+                {% endif %}
+			</table>
+
+		</div>
+		<div class="pay_method">
+			<h2>支付方式</h2>
+			<ul class="pay">
+				<li><a class="cur" href="javascript:void(0)">支付宝支付</a><span>← 选择支付宝支付商品金额</span></li>
+				<li><a href="javascript:void(0)">微信支付</a><span>← 选择微信钱包支付商品金额</span></li>
+			</ul>
+		</div>
+		<div class="calculation">
+			<input type="button" id="settlement" value="结算" />
+			<span>应付金额（含运费{{ totalfreight }}{{ freight }}元）： <b>￥{{ totalprice }}{{ price }}</b></span>
+
+		</div>
+	</div>
+	<div class="clear"></div>
+
+
+    <form method="POST" action="{% url 'pay:submit_order' %}?from={{ frompage }}" hidden="hidden">
+        {% csrf_token %}
+        <input type="text" name="consignee" value="">
+        <input type="text" name="mobile" value="">
+        <input type="text" name="address" value="">
+        <input type="text" name="zip_code" value="">
+        <input type="text" name="pay_type" value="">
+    </form>
+
+</div>
+
+    <script>
+        $(".addr_list li").click(function(){
+            $(this).addClass("cur").siblings().removeClass("cur");
+        });
+
+        $(".pay_method a").click(function(){
+            $(this).parents('ul').find('a').removeClass("cur");
+            $(this).addClass("cur")
+        });
+
+        $("#settlement").click(function () {
+           {# 地址信息#}
+            address_li = $(".contact").find("li[class='cur']");
+            consignee = address_li.find("span").eq(0).text();
+            mobile = address_li.find("span").eq(1).text();
+            address = address_li.find("p").eq(0).text();
+            zip_code = address_li.find("span").eq(2).text();
+            pay_type = $(".pay").find("a[class='cur']").text();
+            if(pay_type == '支付宝支付'){
+                $("input[name='consignee']").val(consignee);
+                $("input[name='mobile']").val(mobile);
+                $("input[name='address']").val(address);
+                $("input[name='zip_code']").val(zip_code);
+                $("input[name='pay_type']").val(pay_type);
+                $('form').submit()
+            }
+            else {
+                alert('该支付方式暂未开通！')
+            }
+
+
+         });
+    </script>
+
+
+{% endblock %}

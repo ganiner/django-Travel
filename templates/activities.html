@@ -1,0 +1,115 @@
+﻿{% extends 'base.html' %}
+{% load staticfiles %}
+{% block content %}
+<!------------------子页框架-------------------->
+<div id="sub_from" style="padding-top:10px;">
+    <div class="cw1200">
+		<!------------------公共盒子-------------------->
+		<div class="public_box bg1">
+			<div class="public_title">
+				<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+				<div class="con">
+					<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+					<div class="name"><img src="{% static 'images/f_t_activity_enrolment.png' %}"/></div>
+				</div>
+				<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+				<div class="clear"></div>
+			</div>
+			<!------------------活动报名-------------------->
+			<div id="activity_enrolment">
+				<div class="pic"><img style="width: 100%;height: 100%" src="{{ MEDIA_URL }}{{ active.image }}"/></div>
+				<div class="con">
+					<h2>{{ active.title }}</h2>
+					<ul>
+						<li><font>出发时间：{{ active.go_time|date:"Y/m/d" }}</font></li>
+						<li>活动咨询：<span>{{ active.phone }}</span><p>集合地点：<span>{{ active.address }}</span></p></li>
+						<li>活动费用：<label>￥{{ active.price|floatformat:"2" }}</label></li>
+					</ul>
+					<div class="buy"><a href="{% url 'operation:travelbuy' %}?list_type=active&id={{ active.id }}">立即报名</a><span>参团人数：{{ active.now_num }}/{{ active.all_num }}</span></div>
+				</div>
+				<div class="clear"></div>
+			</div>
+		</div>
+		<div class="w810 fl">
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_activity_introduce.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------特产详情-------------------->
+				<div id="article">
+					{% autoescape off %}{{ active.introduce }}{% endautoescape %}
+				</div>
+			</div>
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg1">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_comment2.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------评论-------------------->
+				<div id="comment">
+					<div class="list">
+						<div class="tag">
+							<a class="cur" href="javascript:void(0);">活动评论({{ comments.count }})</a>
+						</div>
+						<ul>
+                            {% for comment in comments %}
+                                <li>
+								<div class="pic"><img src="{{ MEDIA_URL }}{{ comment.user.portrait }}"/></div>
+								<div class="con">
+									<label>{{ comment.user.nickname }}</label>
+									<p>{{ comment.comments }}</p>
+									<span>发表于：{{ comment.add_time|date:"Y-m-d H:i"}}</span>
+								</div>
+							</li>
+                            {% endfor %}
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="w380 fr">
+			<!------------------公共盒子-------------------->
+			<div class="public_box bg2">
+				<div class="public_title">
+					<div class="fl"><img src="{% static 'images/from_title_left.png' %}"/></div>
+					<div class="con">
+						<div class="lamp_ico"><img src="{% static 'images/lamp_ico.png' %}"/></div>
+						<div class="name"><img src="{% static 'images/f_t_other_activity.png' %}"/></div>
+					</div>
+					<div class="fr"><img src="{% static 'images/from_title_right.png' %}"/></div>
+					<div class="clear"></div>
+				</div>
+				<!------------------活动推荐-------------------->
+				<div id="activity_recom">
+					<ul>
+                        {% for other_active in other_actives %}
+                            <li>
+							<div class="pic"><a title="" href="{% url 'scenicspots:active_detail' other_active.id %}"><img style="width: 100%;height: 100%" alt="" class="scale-effect" src="{{ MEDIA_URL }}{{ other_active.image }}"/></a></div>
+							<div class="con">
+								<a href="{% url 'scenicspots:active_detail' other_active.id %}">{{ other_active.title }}</a>
+								<span><i class="am-icon-clock-o"></i>{{ other_active.go_time|date:"Y/m/d" }}</span>
+							</div>
+							<div class="clear"></div>
+						</li>
+                        {% endfor %}
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="clear"></div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,93 @@
+﻿{% extends 'shopbase.html' %}
+{% block title %}订单详情{% endblock %}
+{% block head_title %}订单详情{% endblock %}
+{% block content %}
+<!-----------------订单详情---------------->
+<div id="order_details">
+	<div class="cw1000">
+		<div class="public_box pd30">
+			<div class="state">
+                {% if order_state == 'wzf' %}
+                    <p>当前订单状态：<span>未付款</span></p>
+                    <p>请及时付款，不然就被抢光啦！</p>
+                    <a class="buy" href="{% url 'pay:submit_order' %}?from=goods_order&order_num={{ order_num }}">付款</a>
+                {% elif order_state == 'yzf' %}
+                    <p>当前订单状态：<span>已付款</span></p>
+				    <p>确认收货还有积分拿哦～！</p>
+				    <a class="buy" href="{% url 'operation:confirmgoods' %}?order_num={{ order_num }}">确认收货</a>
+                {% elif order_state == 'ysh' %}
+                    <p>当前订单状态：<span>已收货</span></p>
+				    <p>商品怎么样？快去写下评价吧！</p>
+				    <a class="comment" href="{% url 'operation:commentsgoods' %}?order_num={{ order_num }}">评价</a>
+                {% else %}
+                    <p>当前订单状态：<span>已评价</span></p>
+				    <p>订单完成</p>
+				    <a class="comment" href="#">申请售后</a>
+                {% endif %}
+			</div>
+
+        {% if order_state != 'wzf' %}
+			<div class="info">
+				<table>
+					<tr>
+						<th>订单信息</th>
+					</tr>
+					<tr>
+						<td><p>小提示：物流信息或许有延迟，请以物流官网为准！</p></td>
+					</tr>
+                    <tr>
+						<td>假装这里是物流信息</td>
+					</tr>
+				</table>
+			</div>
+        {% endif %}
+			<div class="info">
+				<table>
+					<tr>
+						<th colspan="3">地址信息</th>
+					</tr>
+					<tr>
+						<td>收货人：{{ consignee }}</td>
+						<td>电话：{{ mobile }}</td>
+						<td>邮编：{{ zip_code }}</td>
+					</tr>
+					<tr>
+						<td colspan="3">收货地址：{{ address }}</td>
+					</tr>
+				</table>
+			</div>
+			<div class="list_box">
+				<table>
+					<tbody>
+						<tr>
+							<th>商品名称</th>
+							<th>单价</th>
+							<th>数量</th>
+							<th>总价</th>
+						</tr>
+                        {% for good in goods %}
+                            <tr>
+							<td>
+								<div class="pic"><a href="#"><img width="53" height="53" src="{{ MEDIA_URL }}{{ good.good_image }}"></a></div>
+								<div class="name">
+									<a href="#">{{ good.good_name }}</a>
+									<p>下单日期：{{ create_time }}</p>
+								</div>
+								<div class="clear"></div>
+							</td>
+							<td style="text-align:center;">￥{{ good.good_price }}</td>
+							<td style="text-align:center;">{{ good.good_num }}</td>
+                            {% if forloop.counter == 1 %}
+							    <td rowspan="2" style="text-align:center;">￥{{ price }}</td>
+                            {% endif %}
+						</tr>
+                        {% endfor %}
+					</tbody>
+				</table>
+			</div>
+
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+{% endblock %}

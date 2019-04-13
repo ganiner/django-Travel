@@ -1,0 +1,47 @@
+﻿{% extends 'shopbase.html' %}
+{% block title %}订单评价{% endblock %}
+{% block head_title %}订单评价{% endblock %}
+{% block content %}
+<!-----------------发布评论---------------->
+<div id="post_comment">
+	<div class="cw1000">
+        <div class="public_box mh500 pd80">
+        <div class="info">
+        <div class="pic"><a href="{% if scenic.classification == 'mp' %}
+                                    {% url 'scenicspots:scenic_detail' scenic.scenic_id %}
+                                  {% elif scenic.classification == 'hd' %}
+                                    {% url 'scenicspots:active_detail' scenic.scenic_id %}
+                                  {% else %}
+                                    #
+                                  {% endif %}"><img width="70" height="53" src="{{ MEDIA_URL }}{{ scenic.scenic_image }}"></a></div>
+        <div class="name">
+            <a href="{% if scenic.classification == 'mp' %}
+                        {% url 'scenicspots:scenic_detail' scenic.scenic_id %}
+                      {% elif scenic.classification == 'hd' %}
+                        {% url 'scenicspots:active_detail' scenic.scenic_id %}
+                      {% else %}
+                        #
+                      {% endif %}">{{ scenic.scenic_name }}</a>
+            <p>票价：¥{{ scenic.ticket_price }}</p>
+        </div>
+        <div class="clear"></div>
+    </div>
+        <form action="{% url 'operation:commentspots' %}?scenic_id={{ scenic.scenic_id }}&order_num={{ scenic.order_num }}&scenic_type={{ scenic.classification }}" method="post">
+            <div class="text_input">
+                <textarea name="comment" placeholder="填写评论内容"></textarea>
+            </div>
+            {% csrf_token %}
+        <div class="tip">
+            <p>对商品评论后，可获得最多100积分的奖励哦！</p>
+        </div>
+        <div class="h50"></div>
+        <div class="button">
+            <input class="submit" type="submit" value="发表评论"/>
+        </div>
+        </form>
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+
+{% endblock %}

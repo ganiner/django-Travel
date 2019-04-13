@@ -1,0 +1,94 @@
+﻿{% extends 'shopbase.html' %}
+{% block title %}购物车{% endblock %}
+{% block head_title %}购物车{% endblock %}
+{% load operation_extras %}
+{% block content %}
+<div id="shop_car">
+	<div class="cw1000">
+		<div class="main_title">
+			<ul>
+				<li style="width:35%;">
+					<label class="am-checkbox">
+						<input type="checkbox" id="checkbox_a1" onchange="operation(this.checked, -1)" {% if allcheck %}checked="checked"{% endif %} class="chk_1">
+						<label for="checkbox_a1" style="margin-right:10px;"></label> 全选
+					</label>
+					商品信息
+				</li>
+				<li style="width:15%;">单价</li>
+				<li style="width:20%;">数量</li>
+				<li style="width:15%;">总价</li>
+				<li style="width:15%;">操作</li>
+			</ul>
+		</div>
+		<div class="list_box">
+			<ul>
+                {% for pro in products %}
+                    <li>
+					    <div class="con">
+						<div class="info" style="width:35%;">
+							<label class="am-checkbox" style="float:left;margin-right:15px;">
+{#								<input type="checkbox" id="checkbox_a2" class="chk_1">#}
+{#								<label for="checkbox_a2"></label>#}
+
+                                <input type="checkbox" id="cb{{ pro.id }}" onchange="operation(this.checked, {{ pro.id }})" class="chk_1" {% if pro.is_check %}checked="checked"{% endif %}>
+								<label for="cb{{ pro.id }}"></label>
+
+							</label>
+							<div class="pic"><a href="{% url 'shop:pro_detail' pro.product.id %}"><img width=53 height=53 src="{{ MEDIA_URL }}{{ pro.product.mainimg }}" /></a></div>
+							<div class="name">
+								<a href="{% url 'shop:pro_detail' pro.product.id %}">{{ pro.product.name|truncatechars:"15" }}</a>
+								<p>添加时间：{{ pro.add_time|date:"Y-m-d" }}</p>
+							</div>
+							<div class="clear"></div>
+						</div>
+                            <div class="price" style="width:15%;"><label>￥{{ pro.product.price|floatformat:"2" }}</label><p>邮费：{{ pro.product.freight|floatformat:"2" }}</p></div>
+						<div class="number" style="width:20%;">
+							<div class="Spinner">
+								<a class="DisDe" onclick="operation('reduce', {{ pro.id }})" href="javascript:void(0)"><i>-</i></a>
+								<input class="Amount" onchange="operation(this.value, {{ pro.id }})"  autocomplete="off" value="{{ pro.num }}" maxlength="4">
+								<a class="Increase" onclick="operation('add', {{ pro.id }})" href="javascript:void(0)" ><i>+</i></a>
+							</div>
+						</div>
+						<div class="price" style="width:15%;"><span id="price{{ pro.id }}">￥{% CalculateThePrice pro.product.price pro.num pro.product.freight %}</span></div>
+						<div class="operation" style="width:15%;">
+							<a class="evaluation" href="#">删除</a>
+						</div>
+						<div class="clear"></div>
+					</div>
+				    </li>
+                {% endfor %}
+			</ul>
+		</div>
+		<div class="calculation">
+			<label class="am-checkbox" style="float:left;padding-left:30px;margin-top:15px;">
+				<input type="checkbox" id="checkbox_a0" onchange="operation(this.checked, -1)" {% if allcheck %}checked="checked"{% endif %} class="chk_1">
+				<label style="margin-right:10px;" for="checkbox_a0"></label> 全选
+			</label>
+			<a href="{% url 'operation:confirm' %}">确认订单</a>
+            <span id="totalprice">合计（含运费{{ totalfreight }}元）：<b>￥{{ totalprice }}</b></span>
+
+		</div>
+	</div>
+	<div class="clear"></div>
+</div>
+    <script type="text/javascript">
+        function operation(opera, proid){
+             $.ajaxSetup({headers: {"X-CSRFToken": '{{ csrf_token }}'}});
+             $.ajax({
+                 type: "POST",
+                 data: {'opera': opera, 'proid': proid},
+                 url: '{% url 'operation:shopcaroperation' %}',
+                 cache: false,
+                 dataType: "json",
+                 success:function (data) {
+                     if(data.status == "failed"){
+                         alert(data.msg)
+                     }
+                     $("#shop_car").load(location.href + " #shop_car");
+                 },
+                 error:function (){
+                     alert('error')
+                 },
+              });}
+    </script>
+{% endblock %}
