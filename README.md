@@ -3,8 +3,15 @@
 
 ### 效果图
 
-![](G:\2019project\gits\django-Travel\showimg\home.png)
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/home.png)
 
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/home1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/home2.png)
+
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/admin1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/admin2.png)
 
 
 ### 技术栈
