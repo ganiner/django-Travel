@@ -15,11 +15,12 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import random
 import sys
+import datetime
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 sys.path.insert(0,os.path.join(BASE_DIR,"apps"))
-sys.path.insert(0, os.path.join(BASE_DIR, 'lib'))
+sys.path.insert(1, os.path.join(BASE_DIR, 'lib'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
@@ -50,13 +51,16 @@ INSTALLED_APPS = [
     'DjangoUeditor',
     'captcha',
 
+    'rest_framework',
+
     'users',
-    'news',
     'diarys',
+    'news',
     'operation',
     'scenicspots',
     'shop',
     'pay',
+'rest_framework.authtoken',
 
 ]
 
@@ -104,7 +108,7 @@ WSGI_APPLICATION = 'treval.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'travel',
+        'NAME': 'travel2',
         'USER': "root",
         "PORT":"3306",
         'PASSWORD': "916149",
@@ -197,14 +201,14 @@ CAPTCHA_LENGTH = '4' #当验证码类型为字符型时，指定字母个数
 
 EMAIL_HOST = 'smtp.163.com'
 EMAIL_PORT = 25
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
+EMAIL_HOST_USER = 'gchase@163.com'
+EMAIL_HOST_PASSWORD = '916149179Qq'
 EMAIL_USE_TLS= False
-EMAIL_FROM = ''
+EMAIL_FROM = '916149179Qq'
 
 
 # 支付宝设置
-ALIPAY_APPID = ''
+ALIPAY_APPID = 'appidappidappidappidappid'
 # 公钥
 ALIPAY_PUBLIC_KEY_PATH = os.path.join(BASE_DIR, 'apps/pay/keys/alipay_public_key')
 # 私钥
@@ -214,4 +218,24 @@ ALIPAY_URL = 'https://openapi.alipaydev.com/gateway.do?'
 # 支付关闭时间：
 ALIPAY_CLOSE_TIME = '60m'
 
-DOMAIN_NAME = 'http://127.0.0.1:8000/'
+DOMAIN_NAME = 'http://127.0.0.1:8080/'
+
+
+
+
+
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.TokenAuthentication',
+
+    ),
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': datetime.timedelta(days=1),
+#     JWT_EXPIRATION_DELTA 指明token的有效期
+}

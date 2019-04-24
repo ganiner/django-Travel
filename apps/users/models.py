@@ -14,6 +14,7 @@ def user_directory_path(instance, filename):
 
 # Create your models here.
 class MyUser(AbstractUser):
+
     """
     用户表
     """
