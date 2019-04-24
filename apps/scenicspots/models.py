@@ -55,6 +55,7 @@ class Gallery(models.Model):
         return self.title
 
 
+
 class Active(models.Model):
     """
     旅游活动

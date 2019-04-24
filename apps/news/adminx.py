@@ -22,6 +22,9 @@ class NewsAdmin:
     style_fields = {"content": "ueditor"}
 
 
+
+
+
 class GlobalSettings:
     site_title = '后台管理系统'
     site_footer = 'ChengDu Travel'

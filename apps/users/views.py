@@ -33,6 +33,8 @@ class IndexView(View):
         banners = Banner.objects.all()
         # 精彩活动
         actives = Active.objects.order_by('-add_time')[:3]
+        print("*"*50)
+        print(actives)
         # 热门景区
         natural_spots = Spots.objects.filter(classification='natural')
         # 休闲度假
@@ -95,6 +97,7 @@ class RegisterView(View):
             user_profile.save()
 
             send_register_email(user_name)
+
             messages.add_message(request, messages.SUCCESS, '注册成功！请在邮箱中点击激活链接激活账号！')
             return render(request, 'register.html', {})
         else:
@@ -133,6 +136,8 @@ class LoginView(View):
             is_keep = request.POST.get('is_keep', '')
             user = authenticate(username=username, password=password)
             # 如果用户存在
+            print("*"*50)
+            print(user)
             if user is not None and user.is_active:
                 login(request, user)
                 # 如果保持登陆状态

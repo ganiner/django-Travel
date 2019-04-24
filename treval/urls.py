@@ -13,13 +13,28 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from django.conf.urls import url
 from django.contrib import admin
 from django.urls import path, re_path, include
 from django.views.static import serve
+from rest_framework.routers import DefaultRouter
+from rest_framework_jwt.views import obtain_jwt_token
+
 import xadmin
+from users.api.views import UserViewset
 from users.views import *
 from pay.views import AliPayTestView
 from treval.settings import MEDIA_ROOT, STATIC_ROOT
+from rest_framework.authtoken import views
+
+
+router = DefaultRouter()
+router.register(r'users', UserViewset, base_name="users")
+
+
+
+
+
 
 urlpatterns = [
     # path('admin/', admin.site.urls),
@@ -93,5 +108,29 @@ urlpatterns = [
 
     # static文件路径
     re_path(r'static/(?P<path>.*)$',serve,{"document_root": STATIC_ROOT}),
+
+#     api
+#     用户模块api
+    path("api/",include("users.api.urls")),
+    # 游记模块api
+    path("api/",include("diarys.api.urls")),
+    # 新闻模块api
+    path("api/",include("news.api.urls")),
+    # 旅游模块
+    path("api/",include("scenicspots.api.urls")),
+    # 商店模块
+    path("api/",include("shop.api.urls")),
+
+
+
+
+    # 下面是测试的
+    path("api_auth/",include("rest_framework.urls",namespace='rest_framework')),
+    # rest自带的token认证模式
+    url(r"^api_token_auth/",views.obtain_auth_token),
+    # jwt
+    url(r"^jwt_auth/",obtain_jwt_token),
+
+url(r'apis/', include(router.urls),name='apis'),
 ]
 
