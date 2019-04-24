@@ -3,7 +3,19 @@
 
 ### 效果图
 
-![](G:\2019project\gits\django-Travel\showimg\home.png)
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/admin1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/admin2.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/api1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/api2.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/home.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/home1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/modify/showimg/home2.png)
 
 
 
@@ -14,6 +26,7 @@
 - 支付宝插件
 - xadmin
 - djangoueditor
+- restframework
 - 前端素材来源http://www.17sucai.com/pins/24378.html 
 
 ### 运行项目
