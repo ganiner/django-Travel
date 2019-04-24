@@ -13,6 +13,10 @@
 
 ![](https://github.com/agamgn/django-Travel/blob/master/showimg/admin2.png)
 
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/api1.png)
+
+![](https://github.com/agamgn/django-Travel/blob/master/showimg/api2.png)
+
 
 ### 技术栈
 
@@ -21,6 +25,7 @@
 - 支付宝插件
 - xadmin
 - djangoueditor
+- Django-rest-framework
 - 前端素材来源http://www.17sucai.com/pins/24378.html 
 
 ### 运行项目
